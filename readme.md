@@ -7,4 +7,4 @@ and running.
 Side Note: Application was built with authorization and authentication
 but there is no need to create an account.
 
-![Alt text](Chatroom Example/Images/Screenshot_39.png)
+![Image](Chatroom Example/Images/Screenshot_39.png)
