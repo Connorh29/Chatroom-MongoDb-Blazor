@@ -152,7 +152,6 @@ else
             _hubConnection = new HubConnectionBuilder().WithUrl(_hubUrl).Build();
             _hubConnection.On("Broadcast", SyncWithDbAsync);
             await _hubConnection.StartAsync();
-            _username = string.Empty;
         }
         catch(Exception e)
         {
@@ -184,6 +183,7 @@ else
         await _hubConnection.DisposeAsync();
         _hubConnection = null;
         _isChatting = false;
+        _username = string.Empty;
     }
 
     private async Task SendAsync(string message, MessageType messageType)
