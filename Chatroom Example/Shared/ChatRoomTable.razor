@@ -1,0 +1,27 @@
+﻿@using Chatroom_Example.IServices
+@using Chatroom_Example.Data
+@inject IChatRoomService _chatRoomService;
+
+<table class="table">
+    <thead>
+    <tr style="cursor:pointer;">
+        <th>Room Number</th>
+        <th>Name</th>
+        <th>CreationTime</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var room in Rooms)
+    {
+        <tr style="cursor: pointer">
+            <td><a href="@($"/chatroom/{room.Id}")">@room.Id</a></td>
+            <td>@room.Name</td>
+            <td>@room.CreationTime</td>
+        </tr>
+    }
+    </tbody>
+</table>
+@code {
+    [Parameter]
+    public List<ChatRoomModel> Rooms { get; set; } = new List<ChatRoomModel>();
+}

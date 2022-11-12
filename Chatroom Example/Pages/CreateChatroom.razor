@@ -1,0 +1,20 @@
+﻿@page "/createchatroom/"
+@using Chatroom_Example.IServices
+@using Chatroom_Example.Data
+@inject IChatRoomService chatRoomService;
+<form onsubmit="@OnSubmit">
+    Name: <input @bind="_chatName" type="text" placeholder="Enter chatroom name"/>
+    Password: <input @bind="_password" type="text" placeholder="OPTIONAL"/>
+    <button type="submit">Submit</button>
+</form>
+@code {
+    string _chatName;
+    string _password;
+    private async Task OnSubmit()
+    {
+        var newChatRoom = new ChatRoomModel(_chatName, _password);
+        await chatRoomService.CreateChatRoomAsync(newChatRoom);
+        _chatName = string.Empty;
+        _password = string.Empty;
+    }
+}

@@ -1,0 +1,46 @@
+﻿@page "/chatroom/"
+@using Chatroom_Example.IServices
+@using Chatroom_Example.Data
+@using Chatroom_Example.Core
+@inject IChatRoomService _chatRoomService;
+
+<a href="/createchatroom/">
+    <div class="link">
+        Create Room
+    </div>
+</a>
+<ChatRoomTable Rooms="CurrentPage" />
+<Pagination MetaData="MetaData" Spread="2" SelectedPage="OnPageSelected" />
+@code {
+    public List<ChatRoomModel> AllChatLogs { get; set; } = new List<ChatRoomModel>();
+    public List<ChatRoomModel> CurrentPage { get; set; } = new List<ChatRoomModel>();
+    public MetaData MetaData { get; set; } = new MetaData();
+    private int _pageNumber = 1;
+    private const int PAGE_SIZE = 8;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllChatLogs();
+        MetaData = new MetaData
+        {
+            CurrentPage = 1,
+            TotalCount = AllChatLogs.Count,
+            PageSize = PAGE_SIZE,
+            TotalPages = (int)Math.Ceiling(AllChatLogs.Count / (double)PAGE_SIZE)
+        };
+        GetPage(MetaData.CurrentPage);
+    }
+    private async Task GetAllChatLogs()
+    {
+        AllChatLogs = await _chatRoomService.GetAllChatRoomsAsync();
+    }
+    private void OnPageSelected(int page)
+    {
+        GetPage(page);
+    }
+    private void GetPage(int pageNumber)
+    {
+        CurrentPage = AllChatLogs.GetPage(pageNumber, PAGE_SIZE);
+    }
+}
+
