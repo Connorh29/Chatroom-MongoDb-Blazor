@@ -9,12 +9,23 @@
         Create Room
     </div>
 </a>
+<div class="grid-columns align-items-center">
+    <div>
+        Search for room: <input type="text" placeholder="name" @bind="_searchQuery" @bind:event="oninput" @onkeyup="OnSearchByName" />
+    </div>
+    @if (_isTableQueried)
+    {
+        <DevButton OnClickCallback="OnInitializedAsync">Reset</DevButton>
+    }
+</div>
 <ChatRoomTable Rooms="CurrentPage" />
 <Pagination MetaData="MetaData" Spread="2" SelectedPage="OnPageSelected" />
 @code {
     public List<ChatRoomModel> AllChatLogs { get; set; } = new List<ChatRoomModel>();
     public List<ChatRoomModel> CurrentPage { get; set; } = new List<ChatRoomModel>();
     public MetaData MetaData { get; set; } = new MetaData();
+    private bool _isTableQueried;
+    private string _searchQuery;
     private int _pageNumber = 1;
     private const int PAGE_SIZE = 8;
 
@@ -29,6 +40,8 @@
             TotalPages = (int)Math.Ceiling(AllChatLogs.Count / (double)PAGE_SIZE)
         };
         GetPage(MetaData.CurrentPage);
+        _isTableQueried = false;
+        _searchQuery = string.Empty;
     }
     private async Task GetAllChatLogs()
     {
@@ -41,6 +54,24 @@
     private void GetPage(int pageNumber)
     {
         CurrentPage = AllChatLogs.GetPage(pageNumber, PAGE_SIZE);
+    }
+    private async Task OnSearchByName(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            var query = AllChatLogs
+                .Where(x => x.Name.ToLower().Contains(_searchQuery.ToLower()))
+                .ToList();
+            CurrentPage = query.GetPage(1, PAGE_SIZE);
+            MetaData = new MetaData()
+            {
+                CurrentPage = 1,
+                TotalCount = query.Count,
+                PageSize = PAGE_SIZE,
+                TotalPages = (int) Math.Ceiling(query.Count / (double) PAGE_SIZE)
+            };
+            _isTableQueried = true;
+        }
     }
 }
 

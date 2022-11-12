@@ -2,3 +2,7 @@
     font-size: 3rem;
     color: black;
 }
+.grid-columns {
+    display: grid;
+    grid-template-columns: 25% 25%;
+}

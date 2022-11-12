@@ -1,5 +1,6 @@
 ﻿using Chatroom_Example.Data;
 using Chatroom_Example.IServices;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Chatroom_Example.Services
@@ -12,8 +13,8 @@ namespace Chatroom_Example.Services
         public ChatRoomService()
         {
             _mongoClient = new MongoClient("mongodb://localhost:27017");
-            _database = _mongoClient.GetDatabase("ChatExample");
-            _chatLogsTable = _database.GetCollection<ChatRoomModel>("ChatLogs");
+            _database = _mongoClient.GetDatabase("ChatExample2");
+            _chatLogsTable = _database.GetCollection<ChatRoomModel>("ChatRooms");
         }
         public async Task CreateChatRoomAsync(ChatRoomModel chatRoomModel)
         {
@@ -41,6 +42,7 @@ namespace Chatroom_Example.Services
             var result = await _chatLogsTable.FindAsync(x => true);
             return await result.ToListAsync();
         }
+
         public async Task AddMessageAsync(string chatId, Message message)
         {
             var filter = Builders<ChatRoomModel>.Filter.Eq(x => x.Id, chatId);
